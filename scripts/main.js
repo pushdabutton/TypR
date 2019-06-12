@@ -74,18 +74,20 @@ let randomWord = wordList[Math.floor(Math.random() * wordList.length)]
 
 
 const wordSplitter = (word) => {
-    words = word.split('')
+    let words = word.split('')
     return words
 }
 
+const letterList = []; 
+
+
 const letterGenerator = function(word) {
+    let letters = wordSplitter(word)
 
-    letters = wordSplitter(word)
-
-    // letters.forEach(el =>)
+    letters.forEach(el => {
         textloader.load('node_modules/three/examples/fonts/droid/droid_sans_regular.typeface.json', function (font) {
-        
-            let textGeo = new THREE.TextGeometry(letter, {
+            console.log(el)
+            let textGeo = new THREE.TextGeometry(el, {
                 font: font,
                 size: 50,
                 height: 5,
@@ -107,12 +109,18 @@ const letterGenerator = function(word) {
             meshWord.rotation.x = Math.PI * .1;
 
 
-            scene.add(meshWord)
-            var light3 = new THREE.PointLight(0xFFFFFF, 2, 1000)
-            light3.position.set(camera.position.x, camera.position.y, camera.position.z);
-            scene.add(light3);
+            // scene.add(meshWord)
+            letterList.push(meshWord)
+
         });
+    })
 }
+
+var light3 = new THREE.PointLight(0xFFFFFF, 2, 1000)
+light3.position.set(camera.position.x, camera.position.y, camera.position.z);
+scene.add(light3);
+
+letterGenerator(randomWord)
 
 //KeyPress--------------------------------------------------
 document.addEventListener('keydown', (e) => {
@@ -123,36 +131,36 @@ document.addEventListener('keydown', (e) => {
 
 
 
+let meshWord2;
+textloader.load('node_modules/three/examples/fonts/droid/droid_sans_regular.typeface.json', function (font) {
 
-// textloader.load('node_modules/three/examples/fonts/droid/droid_sans_regular.typeface.json', function (font) {
-
-//     let textGeo = new THREE.TextGeometry(randomWord, {
-//         font: font,
-//         size: 50,
-//         height: 5,
-//         curveSegments: 50,
-//         bevelEnabled: false,
-//         bevelThickness: 1,
-//         bevelSize: 8,
-//         bevelOffset: 0,
-//         bevelSegments: 50
-//     });
+    let textGeo2 = new THREE.TextGeometry(randomWord, {
+        font: font,
+        size: 50,
+        height: 5,
+        curveSegments: 50,
+        bevelEnabled: false,
+        bevelThickness: 1,
+        bevelSize: 8,
+        bevelOffset: 0,
+        bevelSegments: 50
+    });
 
 
-//     meshWord = new THREE.Mesh(
-//         textGeo,
-//         new THREE.MeshLambertMaterial({ color: 0x00f0ff })
-//     );
+    meshWord2 = new THREE.Mesh(
+        textGeo2,
+        new THREE.MeshLambertMaterial({ color: 0x00f0ff })
+    );
 
     
-//     meshWord.rotation.x = Math.PI * .1;
+    meshWord2.rotation.x = Math.PI * .1;
     
 
-//     scene.add(meshWord)
-//     var light3 = new THREE.PointLight(0xFFFFFF, 2, 1000)
-//     light3.position.set(camera.position.x, camera.position.y, camera.position.z);
-//     scene.add(light3);   
-// });
+    scene.add(meshWord2)
+    var light3 = new THREE.PointLight(0xFFFFFF, 2, 1000)
+    light3.position.set(camera.position.x, camera.position.y, camera.position.z);
+    scene.add(light3);   
+});
 
 // //KeyPress--------------------------------------------------
 // document.addEventListener('keydown', (e)=>{
@@ -174,17 +182,33 @@ let movingUp = false
 let xOffset = -150
 let yOffset = 20
 let zOffset = -400
+
+const letterToScene = (letters) => {
+    letters.forEach(el => {
+        scene.add(el)
+    })
+}
+
+letterToScene(letterList)
+
+
 var render = function () {
     requestAnimationFrame(render);   
     renderer.render(scene, camera);
     camera.position.z -= 0.3;
     rifle2.position.z -= 0.3;
-    // debugger
-    meshWord.position.x = camera.position.x + xOffset
-    meshWord.position.y = camera.position.y + yOffset
-    meshWord.position.z = camera.position.z + zOffset
-    zOffset += 1
+    letterList.forEach(el => {
+        debugger
+        el.position.x = camera.position.x + xOffset
+        el.position.y = camera.position.y + yOffset
+        el.position.z = camera.position.z + zOffset
+        zOffset += 1
+    })
 
+    meshWord2.position.x = camera.position.x + xOffset
+    meshWord2.position.y = camera.position.y + yOffset
+    meshWord2.position.z = camera.position.z + zOffset
+    zOffset += 1
     // light3.position.x = camera.position.x - 100
     // light3.position.y = camera.position.y
     // light3.position.z = camera.position.z - 200
