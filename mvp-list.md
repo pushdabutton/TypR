@@ -21,7 +21,4 @@ TypR,  A Javascript game about typing bullets at targets to spell words made usi
 
 
 
-
-
-
 ### 4. Production README 
