@@ -32,8 +32,9 @@ loader.load('3Dmodels/rifle2.glb', function (gltf) {
     // rifle2.rotation.y = Math.PI * .5;
     rifle2.rotation.y = Math.PI;
     scene.add(rifle2);
+    console.log("sychronous")
 })
-
+console.log("asyncrhrous")
 //floor------------------------------------------------------
 
 
@@ -69,7 +70,7 @@ loader.load('3Dmodels/Hallway.glb', function (gltf) {
 
 let textloader = new THREE.FontLoader();
 let meshWord;
-let randomWord = wordList[Math.floor(Math.random() * wordList.length)]
+const randomWord = () => wordList[Math.floor(Math.random() * wordList.length)]
 
 
 
@@ -78,12 +79,12 @@ const wordSplitter = (word) => {
     return words
 }
 
-const letterList = []; 
+let letterList; 
 
 
 const letterGenerator = function(word) {
     let letters = wordSplitter(word)
-
+    letterList = [];
     letters.forEach(el => {
         textloader.load('node_modules/three/examples/fonts/droid/droid_sans_regular.typeface.json', function (font) {
             console.log(el)
@@ -109,7 +110,7 @@ const letterGenerator = function(word) {
             meshWord.rotation.x = Math.PI * .1;
 
 
-            // scene.add(meshWord)
+            scene.add(meshWord)
             letterList.push(meshWord)
 
         });
@@ -120,13 +121,12 @@ var light3 = new THREE.PointLight(0xFFFFFF, 2, 1000)
 light3.position.set(camera.position.x, camera.position.y, camera.position.z);
 scene.add(light3);
 
-letterGenerator(randomWord)
 
 //KeyPress--------------------------------------------------
-document.addEventListener('keydown', (e) => {
-    let value = String.fromCharCode(e.keyCode);
-    console.log(value)
-})
+// document.addEventListener('keydown', (e) => {
+//     let value = String.fromCharCode(e.keyCode);
+//     console.log(value)
+// })
 
 
 
@@ -145,14 +145,14 @@ textloader.load('node_modules/three/examples/fonts/droid/droid_sans_regular.type
         bevelOffset: 0,
         bevelSegments: 50
     });
-
+    
 
     meshWord2 = new THREE.Mesh(
         textGeo2,
         new THREE.MeshLambertMaterial({ color: 0x00f0ff })
-    );
+        );
 
-    
+        
     meshWord2.rotation.x = Math.PI * .1;
     
 
@@ -162,11 +162,7 @@ textloader.load('node_modules/three/examples/fonts/droid/droid_sans_regular.type
     scene.add(light3);   
 });
 
-// //KeyPress--------------------------------------------------
-// document.addEventListener('keydown', (e)=>{
-//     let value = String.fromCharCode(e.keyCode);
-//     console.log(value)
-// })
+
 
 //lighting=--------------------------------------------------
 var light = new THREE.PointLight(0xFFFFFF, 1, 1000)
@@ -177,41 +173,93 @@ var light2 = new THREE.PointLight(0xFFFFFF, 2, 1000)
 light.position.set(0, 0, 25);
 scene.add(light2);
 
+
 //Render------------------------------------------------------
+
+
 let movingUp = false
 let xOffset = -150
 let yOffset = 20
-let zOffset = -400
+let zOffset = -1000
+let newWord = false 
 
-const letterToScene = (letters) => {
-    letters.forEach(el => {
-        scene.add(el)
-    })
-}
+letterGenerator(randomWord())
 
-letterToScene(letterList)
+document.addEventListener('keydown', (e) => {
+    if (String.fromCharCode(e.keyCode) === " "){
+        letterList = [];
+        letterGenerator(randomWord())
+        newWord = true
+        zOffset = -1000  
+        
+    }
+})
+let currentLetter;
+document.addEventListener('keydown', (e) => {
+    let value = String.fromCharCode(e.keyCode);
+
+    currentLetter = value.toLowerCase()
+    console.log(currentLetter)
 
 
-var render = function () {
+})
+
+let lettersToRemove = [];
+
+const render = function () {
     requestAnimationFrame(render);   
     renderer.render(scene, camera);
     camera.position.z -= 0.3;
     rifle2.position.z -= 0.3;
-    letterList.forEach(el => {
-        debugger
-        el.position.x = camera.position.x + xOffset
-        el.position.y = camera.position.y + yOffset
-        el.position.z = camera.position.z + zOffset
-        zOffset += 1
-    })
+    
+    
+    // const WordMaker = () => {
+        // debugger
+    if(newWord){
+        for (let i = 0; i < letterList.length; i++) {
+            let wordOffset = i * 50
+            let el = letterList[i];
+            el.position.x = camera.position.x + xOffset + wordOffset
+            el.position.y = camera.position.y + yOffset
+            el.position.z = camera.position.z + zOffset
+            
+            if(el.position.z >= camera.position.z - 100) {
+                newWord = false
+                scene.remove(el)
+            }
+            // if(currentLetter === null) {
 
-    meshWord2.position.x = camera.position.x + xOffset
-    meshWord2.position.y = camera.position.y + yOffset
-    meshWord2.position.z = camera.position.z + zOffset
-    zOffset += 1
+            // }
+            if (el.geometry.parameters.text === currentLetter && i == 0){
+                // debugger
+                    scene.remove(el)
+                    currentLetter = ""
+                    letterList.shift()
+            }
+            // const keyPress = document.addEventListener('keydown', (e) => {
+            //     let value = String.fromCharCode(e.keyCode);
+            //     if (el.geometry.parameters.text === value.toLowerCase()){
+            //         scene.remove(el)
+            //     }
+            //     document.removeEventListener('keydown', keyPress)
+            //     // console.log(el)
+            //     // debugger
+            // })
+        }   
+        zOffset += 4
+    }
+        
+    // }
+    // meshWord2.position.x = camera.position.x + xOffset
+    // meshWord2.position.y = camera.position.y + yOffset
+    // meshWord2.position.z = camera.position.z + zOffset
+    // zOffset += 1
     // light3.position.x = camera.position.x - 100
     // light3.position.y = camera.position.y
     // light3.position.z = camera.position.z - 200
+    
+        
+
     
     
     if (movingUp) {rifle2.position.y -= 0.02}
