@@ -6,7 +6,7 @@ import wordList from './words'
 //Scene and Camera-------------------------------------------
 const scene = new THREE.Scene();
 
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 5000)
 camera.position.z = 15;
 camera.position.x = -10;
 camera.position.y = 5;
@@ -23,6 +23,20 @@ window.addEventListener('resize', () => {
 
     camera.updateProjectionMatrix();
 })
+
+
+//Backgorund Image-------------------------------------------
+
+let TextureLoader = new THREE.TextureLoader();
+TextureLoader.load('https://images.pexels.com/photos/1205301/pexels-photo-1205301.jpeg', function (texture) {
+    scene.background = texture;
+});
+
+
+
+
+
+
 //rifle------------------------------------------------------
 let rifle2;
 const loader = new GLTFLoader();
@@ -32,18 +46,16 @@ loader.load('3Dmodels/rifle2.glb', function (gltf) {
     // rifle2.rotation.y = Math.PI * .5;
     rifle2.rotation.y = Math.PI;
     scene.add(rifle2);
-    console.log("sychronous")
 })
-console.log("asyncrhrous")
 let flash;
 loader.load('3Dmodels/muzzle_flashes.glb', function (gltf){
     flash = gltf.scene;
 })
-//floor------------------------------------------------------
+//floor and background assets------------------------------------------------------
 
 
 let meshFloor = new THREE.Mesh(
-        new THREE.PlaneGeometry(1000, 1000, 100, 100),
+        new THREE.PlaneGeometry(100, 10000, 100, 100),
         new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true })
     );
     meshFloor.rotation.x = Math.PI / 2; // Rotate the floor 90 degrees
@@ -53,20 +65,41 @@ let meshFloor = new THREE.Mesh(
 
     // camera.position.set(0, player.height, -5);
     // camera.lookAt(new THREE.Vector3(0, 1.8, 0));
-let stage;
-// const loader = new GLTFLoader();
-loader.load('3Dmodels/Hallway.glb', function (gltf) {
-    stage = gltf.scene;
-    // stage.scale.x = stage.scale.y = stage.scale.z = 15;
-    // stage.rotation.y = Math.PI * .5;
-    // stage.rotation.x = 
-    // stage.rotation.x = Math.PI * .5;
-    stage.position.x = 100;
-    stage.position.z = 20; 
-    // stage.position.y = -150;
+let planet;
+// // const loader = new GLTFLoader();
+loader.load('3Dmodels/stace_station.glb', function (gltf) {
+    planet = gltf.scene;
+    planet.scale.x = planet.scale.y = planet.scale.z = 15;
+    planet.rotation.y = Math.PI * .75;
+    // planet.rotation.x = 
+    // planet.rotation.x = Math.PI * .5;
+    // planet.position.x = 400;
+    planet.position.z = -2000; 
+    planet.position.y = 500;
+    planet.position.x = -600
 
 
-    scene.add(stage);
+    scene.add(planet);
+    let light4 = new THREE.PointLight(0xFFFFFF, 2, 1500)
+    light4.position.set(planet.position.x, planet.position.y + 100, planet.position.z - 100);
+    scene.add(light4); 
+})
+
+let tie;
+// // const loader = new GLTFLoader();
+loader.load('3Dmodels/tie-fighter.glb', function (gltf) {
+    tie = gltf.scene;
+    tie.scale.x = tie.scale.y = tie.scale.z = 15;
+    tie.rotation.y = Math.PI * .10;
+    // tie.rotation.x = 
+    // tie.rotation.x = Math.PI * .5;
+    // tie.position.x = 400;
+    tie.position.z = -800;
+    tie.position.y = 300;
+    tie.position.x = 300
+
+
+    scene.add(tie);
 })
 
 
@@ -90,28 +123,28 @@ const letterGenerator = function(word) {
     let letters = wordSplitter(word)
     letterList = [];
     letters.forEach(el => {
-        textloader.load('node_modules/three/examples/fonts/droid/droid_sans_regular.typeface.json', function (font) {
-            console.log(el)
+        textloader.load('node_modules/three/examples/fonts/gentilis_bold.typeface.json', function (font) {
             let textGeo = new THREE.TextGeometry(el, {
                 font: font,
                 size: 50,
                 height: 5,
-                curveSegments: 50,
-                bevelEnabled: false,
-                bevelThickness: 1,
-                bevelSize: 8,
+                // curveSegments: 70,
+                bevelEnabled: true,
+                bevelSize: 2,
                 bevelOffset: 0,
-                bevelSegments: 50
+                bevelSegments: 1
+
             });
 
 
             meshWord = new THREE.Mesh(
                 textGeo,
-                new THREE.MeshLambertMaterial({ color: 0x00f0ff })
+                new THREE.MeshLambertMaterial({ color: 0xe62444 })
             );
 
 
             meshWord.rotation.x = Math.PI * .1;
+            // meshWord.rotation.y = Math.PI * .2;
 
 
             scene.add(meshWord)
@@ -121,8 +154,8 @@ const letterGenerator = function(word) {
     })
 }
 
-var light3 = new THREE.PointLight(0xFFFFFF, 2, 1000)
-light3.position.set(camera.position.x, camera.position.y, camera.position.z);
+let light3 = new THREE.PointLight(0xFFFFFF, 2, 1500)
+light3.position.set(camera.position.x, camera.position.y + 100, camera.position.z - 100);
 scene.add(light3);
 
 
@@ -135,62 +168,65 @@ scene.add(light3);
 
 
 
-let meshWord2;
-textloader.load('node_modules/three/examples/fonts/droid/droid_sans_regular.typeface.json', function (font) {
+// let meshWord2;
+// textloader.load('node_modules/three/examples/fonts/droid/droid_sans_regular.typeface.json', function (font) {
 
-    let textGeo2 = new THREE.TextGeometry(randomWord, {
-        font: font,
-        size: 50,
-        height: 5,
-        curveSegments: 50,
-        bevelEnabled: false,
-        bevelThickness: 1,
-        bevelSize: 8,
-        bevelOffset: 0,
-        bevelSegments: 50
-    });
+//     let textGeo2 = new THREE.TextGeometry(randomWord, {
+//         font: font,
+//         size: 50,
+//         height: 5,
+//         curveSegments: 50,
+//         bevelEnabled: false,
+//         bevelThickness: 1,
+//         bevelSize: 8,
+//         bevelOffset: 0,
+//         bevelSegments: 50
+//     });
     
 
-    meshWord2 = new THREE.Mesh(
-        textGeo2,
-        new THREE.MeshLambertMaterial({ color: 0x00f0ff })
-        );
+//     meshWord2 = new THREE.Mesh(
+//         textGeo2,
+//         new THREE.MeshLambertMaterial({ color: 0x00f0ff })
+//         );
 
         
-    meshWord2.rotation.x = Math.PI * .1;
+//     meshWord2.rotation.x = Math.PI * .1;
     
 
-    scene.add(meshWord2)
-    var light3 = new THREE.PointLight(0xFFFFFF, 2, 1000)
-    light3.position.set(camera.position.x, camera.position.y, camera.position.z);
-    scene.add(light3);   
-});
+//     scene.add(meshWord2)
+//     let light3 = new THREE.PointLight(0xFFFFFF, 2, 1000)
+//     light3.position.set(camera.position.x, camera.position.y, camera.position.z);
+//     scene.add(light3);   
+// });
 
 
 
 //lighting=--------------------------------------------------
-var light = new THREE.PointLight(0xFFFFFF, 1, 1000)
-light.position.set(0, 0, 0);
-scene.add(light);
+// let light = new THREE.PointLight(0xFFFFFF, 1, 1000)
+// light.position.set(0, 0, 0);
+// scene.add(light);
 
-var light2 = new THREE.PointLight(0xFFFFFF, 2, 1000)
-light.position.set(0, 0, 25);
-scene.add(light2);
+
 
 
 //Render------------------------------------------------------
 
 
 let movingUp = false
-let xOffset = -150
-let yOffset = 20
+let xOffset = -200
+let yOffset = 65
 let zOffset = -1000
 let newWord = false 
 
-letterGenerator(randomWord())
+// letterGenerator(randomWord())
 
 document.addEventListener('keyup', (e) => {
     if (String.fromCharCode(e.keyCode) === " "){
+        if(letterList){
+            letterList.forEach(el => {
+                scene.remove(el)
+            })
+        }
         letterList = [];
         letterGenerator(randomWord())
         newWord = true
@@ -200,34 +236,58 @@ document.addEventListener('keyup', (e) => {
 })
 let currentLetter;
 let muzzle = false
+let light2 = new THREE.PointLight(0xFFFFFF, 1, 500)
+scene.add(light2);
+
 document.addEventListener('keydown', (e) => {
     let value = String.fromCharCode(e.keyCode);
-
     currentLetter = value.toLowerCase()
-    console.log(currentLetter)
-    if(!(value == " ")) {
+    if(!(value == " ") && !(e.keyCode == 17)) {
         muzzle = true
+
+        
         flash.rotation.y = Math.PI;
         scene.add(flash)
-        flash.children[1].material.color.r = 0.4
-        flash.children[1].material.color.g = 0
+        flash.children[1].material.color.r = 1
+        flash.children[1].material.color.g = 0.15
         flash.children[1].material.color.b = 0
         flash.position.z = rifle2.position.z - 28;
         flash.position.x = rifle2.position.x;
         flash.position.y = rifle2.position.y + 3;
+        flash.scale.x = flash.scale.y = flash.scale.z = 2;
+        light2.intensity = 2
+        light2.position.set(flash.position.x, flash.position.y, flash.position.z);
     }
-    
-    debugger
 
 })
 
-let lettersToRemove = [];
+let gMode = false
+document.addEventListener('keydown', (e) => {
+    if (e.keyCode == 17){
+        if(gMode) {
+            rifle2.rotation.z = 0
+            gMode = false
+        }else {
+            rifle2.rotation.z = Math.PI * -.25
+            gMode = true
+        }
+    }
+
+})
 
 const render = function () {
     requestAnimationFrame(render);   
     renderer.render(scene, camera);
     camera.position.z -= 0.3;
     rifle2.position.z -= 0.3;
+    light3.position.z -= 0.3;
+    planet.rotation.z -= 0.006;
+    planet.position.z -= 0.06;
+
+    tie.position.x -= 0.3
+    tie.position.z -= 1
+
+    // if (camera.position.z > meshFloor.position.z - 500) { meshFloor.position.z = camera.position.z - 500}
     
     
     // const WordMaker = () => {
@@ -236,7 +296,9 @@ const render = function () {
             for (let i = 0; i < letterList.length; i++) {
                 let wordOffset = i * 50
             let el = letterList[i];
-            el.position.x = camera.position.x + xOffset + wordOffset
+            let mOffset = 0
+            if (el.geometry.parameters.text == 'm') {mOffset = -18}
+            el.position.x = camera.position.x + xOffset + wordOffset + mOffset
             el.position.y = camera.position.y + yOffset
             el.position.z = camera.position.z + zOffset
             
@@ -282,10 +344,13 @@ const render = function () {
     if (movingUp) {rifle2.position.y -= 0.02}
     else if (!movingUp) {rifle2.position.y += 0.02}
     
-    if (rifle2.position.y > 0.3) {movingUp = true;}
+    if (rifle2.position.y > 0.3) {
+        movingUp = true;
+        rifle2.position.y = 0.3
+    }
     else if (rifle2.position.y < -0.3) {movingUp = false;}
     let riflezPos
-    if(muzzle){
+    if(muzzle && !gMode){
         rifle2.position.y += 0.2
         rifle2.rotation.z += 0.1
         riflezPos = rifle2.position.z
@@ -293,21 +358,19 @@ const render = function () {
         muzzle = false
     }else
     
-    if (rifle2.rotation.z > 0) {
+    if (rifle2.rotation.z > 0 && !gMode) {
         rifle2.rotation.z -= 0.15
         rifle2.position.z += 0.1
-    }else if (rifle2.rotation.z < 0){
+    }else if (rifle2.rotation.z < 0 && !gMode){
+        debugger
         rifle2.rotation.z = 0
         scene.remove(flash)
+        light2.intensity = 0
         rifle2.position.z = camera.position.z - 12
     }
-    console.log(rifle2.position.z )
     if (rifle2.position.z < riflezPos) {
-        debugger
         rifle2.position.z = riflezPos
     }
-
-
 } 
 
 render();
@@ -335,17 +398,17 @@ render();
 
 
 
-// var raycaster = new THREE.Raycaster();
-// var mouse = new THREE.Vector2();
-// var geometry = new THREE.BoxGeometry(1, 1, 1);
-// var material = new THREE.MeshLambertMaterial({ color: 0xF7F7F7 });
-//var mesh = new THREE.Mesh(geometry, material);
+// let raycaster = new THREE.Raycaster();
+// let mouse = new THREE.Vector2();
+// let geometry = new THREE.BoxGeometry(1, 1, 1);
+// let material = new THREE.MeshLambertMaterial({ color: 0xF7F7F7 });
+//let mesh = new THREE.Mesh(geometry, material);
 
 //scene.add(mesh);
 
 // let meshX = -10;
-// for (var i = 0; i < 15; i++) {
-    //     var mesh = new THREE.Mesh(geometry, material);
+// for (let i = 0; i < 15; i++) {
+    //     let mesh = new THREE.Mesh(geometry, material);
 //     mesh.position.x = (Math.random() - 0.5) * 10;
 //     mesh.position.y = (Math.random() - 0.5) * 10;
 //     mesh.position.z = (Math.random() - 0.5) * 10;
@@ -363,8 +426,8 @@ render();
 
 //     raycaster.setFromCamera(mouse, camera);
 
-//     var intersects = raycaster.intersectObjects(scene.children, true);
-//     for (var i = 0; i < intersects.length; i++) {
+//     let intersects = raycaster.intersectObjects(scene.children, true);
+//     for (let i = 0; i < intersects.length; i++) {
 //         this.tl = new TimelineMax();
 //         this.tl.to(intersects[i].object.scale, 1, { x: 2, ease: Expo.easeOut })
 //         this.tl.to(intersects[i].object.scale, .5, { x: .5, ease: Expo.easeOut })
@@ -378,14 +441,14 @@ render();
 // window.addEventListener('mousemove', onMouseMove);
 
 // renderer.render(scene, camera)
-// var mtlLoader = new THREE.MTLLoader();
+// let mtlLoader = new THREE.MTLLoader();
 // mtlLoader.setResourcePath('/3Dmodels/');
 // mtlLoader.setPath('/3Dmodels/');
 // mtlLoader.load('rifle.mtl', function (materials) {
 
 //     materials.preload();
 
-//     var objLoader = new THREE.OBJLoader();
+//     let objLoader = new THREE.OBJLoader();
 //     objLoader.setMaterials(materials);
 //     objLoader.setPath('/3Dmodels/');
 //     objLoader.load('rifle.obj', function (object) {

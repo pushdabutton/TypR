@@ -89,7 +89,7 @@ export default [
 ,"grapple"
 ,"grope"
 ,"gullible"
-,"Haggard"
+,"haggard"
 ,"haven"
 ,"heritage"
 ,"hindrance"
@@ -188,6 +188,6 @@ export default [
 ,"vie"
 ,"vilify"
 ,"voracious"
-,"Wage"
+,"wage"
 ,"wrangle"
 ]
