@@ -322,101 +322,102 @@ const render = function () {
         return; // Stop the function here.
     }
 
+    if(rifle2){
+        requestAnimationFrame(render);   
+        renderer.render(scene, camera);
+        camera.position.z -= 0.3;
+        rifle2.position.z -= 0.3;
+        light3.position.z -= 0.3;
+        planet.rotation.z -= 0.006;
+        planet.position.z -= 0.06;
 
-    requestAnimationFrame(render);   
-    renderer.render(scene, camera);
-    camera.position.z -= 0.3;
-    rifle2.position.z -= 0.3;
-    light3.position.z -= 0.3;
-    planet.rotation.z -= 0.006;
-    planet.position.z -= 0.06;
+        tie.position.x -= 0.3
+        tie.position.z -= 1
 
-    tie.position.x -= 0.3
-    tie.position.z -= 1
-
-    // if (camera.position.z > meshFloor.position.z - 500) { meshFloor.position.z = camera.position.z - 500}
-    
-    
-    // const WordMaker = () => {
-        // debugger
-        if(newWord){
-            for (let i = 0; i < letterList.length; i++) {
-                let wordOffset = i * 50
-            let el = letterList[i];
-            let mOffset = 0
-            if (el.geometry.parameters.text == 'm') {mOffset = -18}
-            el.position.x = camera.position.x + xOffset + wordOffset + mOffset
-            el.position.y = camera.position.y + yOffset
-            el.position.z = camera.position.z + zOffset
-            
-            if(el.position.z >= camera.position.z - 100) {
-                newWord = false
-                scene.remove(el)
-            }
-            // if(currentLetter === null) {
-                
-                // }
-                if (el.geometry.parameters.text === currentLetter && i == 0){
-                    // debugger
-                    scene.remove(el)
-                    currentLetter = ""
-                    letterList.shift()
-                }
-                // const keyPress = document.addEventListener('keydown', (e) => {
-            //     let value = String.fromCharCode(e.keyCode);
-            //     if (el.geometry.parameters.text === value.toLowerCase()){
-                //         scene.remove(el)
-                //     }
-            //     document.removeEventListener('keydown', keyPress)
-            //     // console.log(el)
-            //     // debugger
-            // })
-        }   
-        zOffset += 4
-    }
+        // if (camera.position.z > meshFloor.position.z - 500) { meshFloor.position.z = camera.position.z - 500}
         
-    // }
-    // meshWord2.position.x = camera.position.x + xOffset
-    // meshWord2.position.y = camera.position.y + yOffset
-    // meshWord2.position.z = camera.position.z + zOffset
-    // zOffset += 1
-    // light3.position.x = camera.position.x - 100
-    // light3.position.y = camera.position.y
-    // light3.position.z = camera.position.z - 200
-    
-    
-    
-    
-    
-    if (movingUp) {rifle2.position.y -= 0.02}
-    else if (!movingUp) {rifle2.position.y += 0.02}
-    
-    if (rifle2.position.y > 0.3) {
-        movingUp = true;
-        rifle2.position.y = 0.3
-    }
-    else if (rifle2.position.y < -0.3) {movingUp = false;}
-    let riflezPos
-    if(muzzle && !gMode){
-        rifle2.position.y += 0.2
-        rifle2.rotation.z += 0.1
-        riflezPos = rifle2.position.z
-        rifle2.position.z += 0.3
-        muzzle = false
-    }else
-    
-    if (rifle2.rotation.z > 0 && !gMode) {
-        rifle2.rotation.z -= 0.15
-        rifle2.position.z += 0.1
-    }else if (rifle2.rotation.z < 0 && !gMode){
-        debugger
-        rifle2.rotation.z = 0
-        scene.remove(flash)
-        light2.intensity = 0
-        rifle2.position.z = camera.position.z - 12
-    }
-    if (rifle2.position.z < riflezPos) {
-        rifle2.position.z = riflezPos
+        
+        // const WordMaker = () => {
+            // debugger
+            if(newWord){
+                for (let i = 0; i < letterList.length; i++) {
+                    let wordOffset = i * 50
+                let el = letterList[i];
+                let mOffset = 0
+                if (el.geometry.parameters.text == 'm') {mOffset = -18}
+                el.position.x = camera.position.x + xOffset + wordOffset + mOffset
+                el.position.y = camera.position.y + yOffset
+                el.position.z = camera.position.z + zOffset
+                
+                if(el.position.z >= camera.position.z - 100) {
+                    newWord = false
+                    scene.remove(el)
+                }
+                // if(currentLetter === null) {
+                    
+                    // }
+                    if (el.geometry.parameters.text === currentLetter && i == 0){
+                        // debugger
+                        scene.remove(el)
+                        currentLetter = ""
+                        letterList.shift()
+                    }
+                    // const keyPress = document.addEventListener('keydown', (e) => {
+                //     let value = String.fromCharCode(e.keyCode);
+                //     if (el.geometry.parameters.text === value.toLowerCase()){
+                    //         scene.remove(el)
+                    //     }
+                //     document.removeEventListener('keydown', keyPress)
+                //     // console.log(el)
+                //     // debugger
+                // })
+            }   
+            zOffset += 4
+        }
+            
+        // }
+        // meshWord2.position.x = camera.position.x + xOffset
+        // meshWord2.position.y = camera.position.y + yOffset
+        // meshWord2.position.z = camera.position.z + zOffset
+        // zOffset += 1
+        // light3.position.x = camera.position.x - 100
+        // light3.position.y = camera.position.y
+        // light3.position.z = camera.position.z - 200
+        
+        
+        
+        
+        
+        if (movingUp) {rifle2.position.y -= 0.02}
+        else if (!movingUp) {rifle2.position.y += 0.02}
+        
+        if (rifle2.position.y > 0.3) {
+            movingUp = true;
+            rifle2.position.y = 0.3
+        }
+        else if (rifle2.position.y < -0.3) {movingUp = false;}
+        let riflezPos
+        if(muzzle && !gMode){
+            rifle2.position.y += 0.2
+            rifle2.rotation.z += 0.1
+            riflezPos = rifle2.position.z
+            rifle2.position.z += 0.3
+            muzzle = false
+        }else
+        
+        if (rifle2.rotation.z > 0 && !gMode) {
+            rifle2.rotation.z -= 0.15
+            rifle2.position.z += 0.1
+        }else if (rifle2.rotation.z < 0 && !gMode){
+            debugger
+            rifle2.rotation.z = 0
+            scene.remove(flash)
+            light2.intensity = 0
+            rifle2.position.z = camera.position.z - 12
+        }
+        if (rifle2.position.z < riflezPos) {
+            rifle2.position.z = riflezPos
+        }
     }
 } 
 
