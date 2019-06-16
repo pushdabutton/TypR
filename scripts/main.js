@@ -2,6 +2,40 @@
 import GLTFLoader from '../js/GLTFLoader';
 import wordList from './words'
 
+//loading Screen--------------------------------------------
+
+// An object to hold all the things needed for our loading screen
+var loadingScreen = {
+    scene: new THREE.Scene(),
+    camera: new THREE.PerspectiveCamera(90, 1280 / 720, 0.1, 100),
+    box: new THREE.Mesh(
+        new THREE.BoxGeometry(0.5, 0.5, 0.5),
+        new THREE.MeshBasicMaterial({ color: 0x4444ff })
+    )
+};
+var loadingManager = null;
+var RESOURCES_LOADED = false;
+
+
+
+loadingScreen.box.position.set(0, 0, 5);
+loadingScreen.camera.lookAt(loadingScreen.box.position);
+loadingScreen.scene.add(loadingScreen.box);
+
+// Create a loading manager to set RESOURCES_LOADED when appropriate.
+// Pass loadingManager to all resource loaders.
+loadingManager = new THREE.LoadingManager();
+
+loadingManager.onProgress = function (item, loaded, total) {
+    console.log(item, loaded, total);
+};
+
+loadingManager.onLoad = function () {
+    console.log("loaded all resources");
+    RESOURCES_LOADED = true;
+};
+
+
 
 //Scene and Camera-------------------------------------------
 const scene = new THREE.Scene();
@@ -27,8 +61,8 @@ window.addEventListener('resize', () => {
 
 //Backgorund Image-------------------------------------------
 
-let TextureLoader = new THREE.TextureLoader();
-TextureLoader.load('https://images.pexels.com/photos/1205301/pexels-photo-1205301.jpeg', function (texture) {
+let TextureLoader = new THREE.TextureLoader(loadingManager);
+TextureLoader.load('3Dmodels/space_background.jpeg', function (texture) {
     scene.background = texture;
 });
 
@@ -39,7 +73,7 @@ TextureLoader.load('https://images.pexels.com/photos/1205301/pexels-photo-120530
 
 //rifle------------------------------------------------------
 let rifle2;
-const loader = new GLTFLoader();
+const loader = new GLTFLoader(loadingManager);
 loader.load('3Dmodels/rifle2.glb', function (gltf) {
     rifle2 = gltf.scene;
     rifle2.scale.x = rifle2.scale.y = rifle2.scale.z = 5;
@@ -105,7 +139,7 @@ loader.load('3Dmodels/tie-fighter.glb', function (gltf) {
 
 //words------------------------------------------------------
 
-let textloader = new THREE.FontLoader();
+let textloader = new THREE.FontLoader(loadingManager);
 let meshWord;
 const randomWord = () => wordList[Math.floor(Math.random() * wordList.length)]
 
@@ -276,6 +310,19 @@ document.addEventListener('keydown', (e) => {
 })
 
 const render = function () {
+
+    if (RESOURCES_LOADED == false) {
+        requestAnimationFrame(render);
+
+        loadingScreen.box.position.x -= 0.05;
+        if (loadingScreen.box.position.x < -10) loadingScreen.box.position.x = 10;
+        loadingScreen.box.position.y = Math.sin(loadingScreen.box.position.x);
+
+        renderer.render(loadingScreen.scene, loadingScreen.camera);
+        return; // Stop the function here.
+    }
+
+
     requestAnimationFrame(render);   
     renderer.render(scene, camera);
     camera.position.z -= 0.3;
