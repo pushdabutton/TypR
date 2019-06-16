@@ -74,7 +74,7 @@ TextureLoader.load('3Dmodels/space_background.jpeg', function (texture) {
 //rifle------------------------------------------------------
 let rifle2;
 const loader = new GLTFLoader(loadingManager);
-loader.load('3Dmodels/rifle2.glb', function (gltf) {
+loader.load('3Dmodels/Rifle2.glb', function (gltf) {
     rifle2 = gltf.scene;
     rifle2.scale.x = rifle2.scale.y = rifle2.scale.z = 5;
     // rifle2.rotation.y = Math.PI * .5;
