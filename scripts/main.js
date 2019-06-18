@@ -3,15 +3,14 @@ import GLTFLoader from '../js/GLTFLoader';
 import wordList from './words'
 
 //loading Screen--------------------------------------------
-
 // An object to hold all the things needed for our loading screen
 let loadingScreen = {
     scene: new THREE.Scene(),
     camera: new THREE.PerspectiveCamera(90, 1280 / 720, 0.1, 100),
     box: new THREE.Mesh(
         new THREE.BoxGeometry(0.5, 0.5, 0.5),
-        new THREE.MeshBasicMaterial({ color: 0x4444ff })
-    )
+        new THREE.MeshBasicMaterial({ color: 0xe62444 })
+        )
 };
 let loadingManager = null;
 let RESOURCES_LOADED = false;
@@ -34,6 +33,56 @@ loadingManager.onLoad = function () {
     console.log("loaded all resources");
     RESOURCES_LOADED = true;
 };
+
+//game Over--------------------------------------------------
+let textloader = new THREE.FontLoader(loadingManager);
+let gameOver = false
+let GameOverMesh;
+let gameOverObj = {
+    textloader,
+    scene: new THREE.Scene(),
+    camera: new THREE.PerspectiveCamera(90, 1280 / 720, 0.1, 2000),
+}
+let light4 = new THREE.PointLight(0xFFFFFF, 2, 1500)
+
+const finalScore = (scorePoints) => {
+    textloader.load('3Dmodels/Guardians_Regular.json', function (font) {
+        let GameOverGeo = new THREE.TextGeometry(`Game Over \nScore ${scorePoints}`, {
+            font: font,
+            size: 50,
+            height: 5,
+            curveSegments: 70,
+            bevelEnabled: true,
+            bevelSize: 2,
+            bevelOffset: 0,
+            bevelSegments: 1
+
+        });
+
+        GameOverMesh = new THREE.Mesh(
+            GameOverGeo,
+            new THREE.MeshLambertMaterial({ color: 0xe62444 })
+            );
+
+
+
+        // meshWord.rotation.x = Math.PI * .1;
+        // meshWord.rotation.y = Math.PI * .2;
+
+
+        GameOverMesh.position.set(-300, 0, 5);
+        gameOverObj.scene.add(GameOverMesh)
+        gameOverObj.scene.add(light4)
+
+    });
+}
+
+
+
+
+
+// gameOverObj.camera.lookAt(gameOverObj.message.position);
+// gameOverObj.scene.add(GameOverMesh);
 
 
 
@@ -130,6 +179,8 @@ loader.load('3Dmodels/tie-fighter.glb', function (gltf) {
     scene.add(tie);
 })
 
+
+
 let ship;
 loader.load('3Dmodels/Simple_Ship.glb', function (gltf) {
     ship = gltf.scene;
@@ -143,10 +194,24 @@ loader.load('3Dmodels/Simple_Ship.glb', function (gltf) {
     scene.add(ship);
 })
 
+let ironman;
+// // const loader = new GLTFLoader();
+loader.load('3Dmodels/iron_man.glb', function (gltf) {
+    ironman = gltf.scene;
+    ironman.scale.x = ironman.scale.y = ironman.scale.z = 15;
+    ironman.rotation.y = Math.PI * .10;
+    ironman.position.z = -800;
+    ironman.position.y = 100;
+    ironman.position.x = 100
+
+    ironman.rotation.x = Math.PI * -.40
+    ironman.rotation.y = Math.PI
+    scene.add(ironman);
+})
 
 //words------------------------------------------------------
 
-let textloader = new THREE.FontLoader(loadingManager);
+// let textloader = new THREE.FontLoader(loadingManager);
 let meshWord;
 const randomWord = () => wordList[Math.floor(Math.random() * wordList.length)]
 
@@ -190,7 +255,7 @@ const letterGenerator = function(word) {
 
             scene.add(meshWord)
             letterList.push(meshWord)
-
+        
         });
     })
 }
@@ -199,8 +264,99 @@ let light3 = new THREE.PointLight(0xFFFFFF, 2, 1500)
 light3.position.set(camera.position.x, camera.position.y + 100, camera.position.z - 100);
 scene.add(light3);
 
+//Instructions------------------------------------------------------------
+let meshInst;
+textloader.load('3Dmodels/Guardians_Regular.json', function (font) {
+    let instGeo = new THREE.TextGeometry("Type.R \nPress Space \nFor New Words", {
+        font: font,
+        size: 50 ,
+        height: 5,
+        curveSegments: 70,
+        bevelEnabled: true,
+        bevelSize: 2,
+        bevelOffset: 0,
+        bevelSegments: 1
+
+    });
 
 
+    meshInst = new THREE.Mesh(
+        instGeo,
+        new THREE.MeshLambertMaterial({ color: 0xe62444 })
+    );
+
+
+    meshInst.rotation.x = Math.PI * .1;
+    // meshWord.rotation.y = Math.PI * .2;
+
+
+    scene.add(meshInst)
+});
+
+//score------------------------------------------------------------------
+
+
+let score;
+textloader.load('3Dmodels/Guardians_Regular.json', function (font) {
+    let scoreGeo = new THREE.TextGeometry("Score ", {
+        font: font,
+        size: 2,
+        height: 2,
+        curveSegments: 70,
+        // bevelEnabled: true,
+        // bevelSize: 2,
+        // bevelOffset: 0,
+        // bevelSegments: 1
+
+    });
+
+
+    score = new THREE.Mesh(
+        scoreGeo,
+        new THREE.MeshLambertMaterial({ color: 0xe62444 })
+    );
+
+
+    score.rotation.y = Math.PI * .07;
+    // meshWord.rotation.y = Math.PI * .2;
+
+
+    scene.add(score)
+});
+let scorePoints = 0;
+let scoreNum3D;
+
+const pointUpdate = (scorePoints) => {
+    textloader.load('3Dmodels/Guardians_Regular.json', function (font) {
+        if(scoreNum3D) {scene.remove(scoreNum3D)}
+        let scoreNumGeo = new THREE.TextGeometry(scorePoints.toString(), {
+            font: font,
+            size: 2,
+            height: 2,
+            curveSegments: 70,
+            // bevelEnabled: true,
+            // bevelSize: 2,
+            // bevelOffset: 0,
+            // bevelSegments: 1
+
+        });
+
+
+        scoreNum3D = new THREE.Mesh(
+            scoreNumGeo,
+            new THREE.MeshLambertMaterial({ color: 0xe62444 })
+        );
+
+
+        scoreNum3D.rotation.y = Math.PI * .08;
+        // meshWord.rotation.y = Math.PI * .2;
+
+
+        scene.add(scoreNum3D)
+    });
+
+
+}
 //Render and EventListners------------------------------------------------
 
 
@@ -212,14 +368,27 @@ let newWord = false
 
 
 // letterGenerator(randomWord())
-
+let start = false
+let startPos;
 document.addEventListener('keyup', (e) => {
     if (String.fromCharCode(e.keyCode) === " "){
+
+        if(!start) {
+            start = true
+            startPos = camera.position.z
+        }
+
         if(letterList){
             letterList.forEach(el => {
                 scene.remove(el)
+                if(scorePoints > 0) {scorePoints -= 1}
             })
         }
+        
+        if(meshInst){
+            scene.remove(meshInst)
+        }
+
         letterList = [];
         letterGenerator(randomWord())
         newWord = true
@@ -245,13 +414,18 @@ document.addEventListener('keydown', (e) => {
         flash.children[1].material.color.g = 0
         flash.children[1].material.color.b = 0.2
         flash.children[1].material.opacity = .5
-        debugger
+
         flash.position.z = rifle2.position.z - 28;
         flash.position.x = rifle2.position.x;
         flash.position.y = rifle2.position.y + 3;
         flash.scale.x = flash.scale.y = flash.scale.z = 2;
         light2.intensity = 7
         light2.position.set(flash.position.x, flash.position.y, flash.position.z - 20);
+
+        // debugger
+        if(currentLetter !== letterList[0].geometry.parameters.text && scorePoints > 0){
+            scorePoints -= 1
+        }
     }
 
 })
@@ -269,22 +443,66 @@ document.addEventListener('keydown', (e) => {
     }
 
 })
-
+let scorer = true
 const render = function () {
 
+    if(start && camera.position.z < startPos - 2000) {
+        gameOver = true
+    }
+    
+    
     if (RESOURCES_LOADED == false) {
         requestAnimationFrame(render);
-
+        
         loadingScreen.box.position.x -= 0.05;
         if (loadingScreen.box.position.x < -10) loadingScreen.box.position.x = 10;
         loadingScreen.box.position.y = Math.sin(loadingScreen.box.position.x);
-
+        
         renderer.render(loadingScreen.scene, loadingScreen.camera);
         return; // Stop the function here.
     }
+    if(gameOver){
+        requestAnimationFrame(render);
+        if(scorer){
+            finalScore(scorePoints)
+            scorer = false
+        }
+        GameOverMesh.position.z -= 0.05;
+        GameOverMesh.position.z -= 0.5;
+        light4.position.set(GameOverMesh.position.x, GameOverMesh.position.y, GameOverMesh.position.z + 100)
+        // if (gameOverObj.message.position.x < -10) gameOverObj.message.position.x = 10;
+        // gameOverObj.message.position.z = gameOverObj.camera.position.z - 100;
+        renderer.render(gameOverObj.scene, gameOverObj.camera);
+        if(GameOverMesh.position.z < -1000) {location.reload()}
+        return; // Stop the function here.
+    }
+
+
+    if(meshInst) {
+        meshInst.position.x = camera.position.x + xOffset - 400
+        meshInst.position.y = camera.position.y + yOffset + 200
+        meshInst.position.z = camera.position.z + zOffset + 100
+    }
+    pointUpdate(scorePoints)
+
+    if(scoreNum3D){
+        score.position.x = camera.position.x - 40
+        score.position.y = camera.position.y - 15
+        score.position.z = camera.position.z - 30 
+        scoreNum3D.position.x = camera.position.x - 22
+        scoreNum3D.position.y = camera.position.y - 13.5
+        scoreNum3D.position.z = camera.position.z - 30 
+    }
+
+
+    if(camera.position.z < -500) {
+        // ironman.position.z = camera.position.z - 200
+        ironman.rotation.y += 0.02
+        ironman.position.y -= 0.2
+        ironman.position.x += 0.2
+    }
 
     if(rifle2){
-
         requestAnimationFrame(render);   
         renderer.render(scene, camera);
 
@@ -295,7 +513,6 @@ const render = function () {
             ship.rotation.y += 0.01
         }
 
-        console.log(camera.position.z)
 
         camera.position.z -= 0.3;
         rifle2.position.z -= 0.3;
@@ -321,15 +538,16 @@ const render = function () {
                 if(el.position.z >= camera.position.z - 100) {
                     newWord = false
                     scene.remove(el)
+                    if(scorePoints > 0) {scorePoints -= 1}
                 }
 
                 if (el.geometry.parameters.text === currentLetter && i == 0){
-                    // debugger
                     scene.remove(el)
                     currentLetter = ""
-                letterList.shift()
-            }
-        }   
+                    letterList.shift()
+                    scorePoints += 1;
+                }
+            }   
         zOffset += 4
         }
             
