@@ -358,7 +358,7 @@ const pointUpdate = (scorePoints) => {
 
 }
 //audio-----------------------------------------------------------------
-const songs = ['audio/Ghetto Gaza_3.mp3', 'audio/Sacrifice_3.mp3', 'audio/reptar_4.mp3', 'audio/Futuristic Love Cannon.mp3', 'audio/The Last Strand (2).mp3', 'audio/Futuristic Love Cannon.mp3', 'audio/Only Human_4.mp3']
+const songs = ['audio/Ghetto Gaza_3.mp3', 'audio/Sacrifice_3.mp3', 'audio/reptar_4.mp3', 'audio/Futuristic Love Cannon.mp3', 'audio/The Last Strand (2).mp3', 'audio/Futuristic Love Cannon.mp3', 'audio/Only Human_4.mp3', 'audio/City_5.mp3']
 let song;
 
 // song = document.createElement("audio");
@@ -374,7 +374,7 @@ const playSong = () => {
     song = document.createElement("audio");
     document.body.appendChild(song)
     song.src = songs[Math.floor(Math.random() * songs.length)]
-    song.volume = 0.30
+    song.volume = 0.30 
     console.log("song volume", song.volume)
     song.setAttribute("loop", "")
     song.setAttribute("autoplay", "")
