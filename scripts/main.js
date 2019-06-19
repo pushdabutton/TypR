@@ -35,7 +35,7 @@ loadingManager.onLoad = function () {
 };
 
 //game Over--------------------------------------------------
-let textloader = new THREE.FontLoader(loadingManager);
+let textloader = new THREE.FontLoader();
 let gameOver = false
 let GameOverMesh;
 let gameOverObj = {
@@ -357,7 +357,52 @@ const pointUpdate = (scorePoints) => {
 
 
 }
+//audio-----------------------------------------------------------------
+const songs = ['audio/Ghetto Gaza_3.mp3', 'audio/Sacrifice_3.mp3', 'audio/reptar_4.mp3', 'audio/Futuristic Love Cannon.mp3', 'audio/The Last Strand (2).mp3', 'audio/Futuristic Love Cannon.mp3', 'audio/Only Human_4.mp3']
+let song;
+
+// song = document.createElement("audio");
+// document.body.appendChild(song)
+// song.setAttribute("loop")
+// song.style.display = "hidden"
+
+
+const playSong = () => {
+    // song = new Audio(songs[Math.floor(Math.random() * songs.length)])
+    // song.play()
+    // song.loop()
+    song = document.createElement("audio");
+    document.body.appendChild(song)
+    song.src = songs[Math.floor(Math.random() * songs.length)]
+    song.volume = 0.30
+    console.log("song volume", song.volume)
+    song.setAttribute("loop", "")
+    song.setAttribute("autoplay", "")
+    song.style.display = "hidden"
+}
+const stopSong = () => {
+    // var element = document.getElementById(elementId);
+    song.parentNode.removeChild(song);
+}
+
+
 //Render and EventListners------------------------------------------------
+let songPlaying = false
+
+
+document.addEventListener('keyup', (e) => {
+    if (e.keyCode === 16) {
+        if (!songPlaying){
+            playSong()
+            songPlaying = true
+        }else{
+            stopSong()
+            songPlaying = false
+        }
+    }
+})
+
+
 
 
 let movingUp = false
@@ -400,7 +445,20 @@ let currentLetter;
 let muzzle = false
 let light2 = new THREE.PointLight(0xFFFFFF, 1, 1000)
 scene.add(light2);
+let gunshot = new Audio("audio/gunshot.wav")
+let gunshot2 = new Audio("audio/gunshot.wav")
+let gunshot3 = new Audio("audio/gunshot.wav")
+let gunshot4 = new Audio("audio/gunshot.wav")
+let gunshot5 = new Audio("audio/gunshot.wav")
+let gunshot6 = new Audio("audio/gunshot.wav")
+let gunshot7 = new Audio("audio/gunshot.wav")
+let gunshot8 = new Audio("audio/gunshot.wav")
+let gunshot9 = new Audio("audio/gunshot.wav")
+let gunshot10 = new Audio("audio/gunshot.wav")
+let startSong = true
 
+let gunshots = [gunshot, gunshot2, gunshot3, gunshot4, gunshot5, gunshot6, gunshot7, gunshot8, gunshot9, gunshot10]
+let i = 0
 document.addEventListener('keydown', (e) => {
     let value = String.fromCharCode(e.keyCode);
     currentLetter = value.toLowerCase()
@@ -421,6 +479,12 @@ document.addEventListener('keydown', (e) => {
         flash.scale.x = flash.scale.y = flash.scale.z = 2;
         light2.intensity = 7
         light2.position.set(flash.position.x, flash.position.y, flash.position.z - 20);
+
+
+        gunshots[i].play()
+        i += 1
+        debugger
+        if(i == gunshots.length) i = 0
 
         // debugger
         if(currentLetter !== letterList[0].geometry.parameters.text && scorePoints > 0){
@@ -505,6 +569,12 @@ const render = function () {
     if(rifle2){
         requestAnimationFrame(render);   
         renderer.render(scene, camera);
+
+        if (startSong) {
+            playSong()
+            startSong = false
+            songPlaying = true
+        }
 
         if(camera.position.z < -1000) {
             ship.rotation.y += 0.05
