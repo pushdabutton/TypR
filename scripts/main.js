@@ -510,7 +510,7 @@ document.addEventListener('keydown', (e) => {
 let scorer = true
 const render = function () {
 
-    if(start && camera.position.z < startPos - 2000) {
+    if(start && camera.position.z < startPos - 1000) {
         gameOver = true
     }
     
@@ -537,7 +537,7 @@ const render = function () {
         // if (gameOverObj.message.position.x < -10) gameOverObj.message.position.x = 10;
         // gameOverObj.message.position.z = gameOverObj.camera.position.z - 100;
         renderer.render(gameOverObj.scene, gameOverObj.camera);
-        if(GameOverMesh.position.z < -1000) {location.reload()}
+        if(GameOverMesh.position.z < -500) {location.reload()}
         return; // Stop the function here.
     }
 
@@ -583,12 +583,13 @@ const render = function () {
             ship.rotation.y += 0.01
         }
 
-
-        camera.position.z -= 0.3;
-        rifle2.position.z -= 0.3;
-        light3.position.z -= 0.3;
-        planet.rotation.z -= 0.006;
-        planet.position.z -= 0.06;
+        if(start){
+            camera.position.z -= 0.3;
+            rifle2.position.z -= 0.3;
+            light3.position.z -= 0.3;
+            planet.rotation.z -= 0.006;
+            planet.position.z -= 0.06;
+        }
 
         tie.position.x -= 0.3
         tie.position.z -= 1
