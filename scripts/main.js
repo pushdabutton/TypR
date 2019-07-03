@@ -77,12 +77,9 @@ const finalScore = (scorePoints) => {
     });
 }
 
-
-
-
-
 // gameOverObj.camera.lookAt(gameOverObj.message.position);
 // gameOverObj.scene.add(GameOverMesh);
+
 
 
 
@@ -357,6 +354,80 @@ const pointUpdate = (scorePoints) => {
 
 
 }
+
+//Time Left--------------------------------------------------
+let timeLeftMesh;
+
+
+const timeLeft = () => {
+    textloader.load('3Dmodels/Guardians_Regular.json', function (font) {
+        let timeLeftGeo = new THREE.TextGeometry(`Time Left`, {
+            font: font,
+            size: 20,
+            height: 5,
+            curveSegments: 70,
+            bevelEnabled: true,
+            bevelSize: 2,
+            bevelOffset: 0,
+            bevelSegments: 1
+
+        });
+
+        timeLeftMesh = new THREE.Mesh(
+            timeLeftGeo,
+            new THREE.MeshLambertMaterial({ color: 0xe62444 })
+        );
+
+
+
+        // meshWord.rotation.x = Math.PI * .1;
+        // meshWord.rotation.y = Math.PI * .2;
+
+
+        // timeLeftMesh.position.set(-300, 0, 5);
+        timeLeftMesh.rotation.x = Math.PI * .1;
+        scene.add(timeLeftMesh)
+
+
+
+    });
+}
+timeLeft()
+let timeLeftNum
+const timeUpdate = (timeLeftInt) => {
+    textloader.load('3Dmodels/Guardians_Regular.json', function (font) {
+        if (timeLeftNum) { scene.remove(timeLeftNum) }
+        let scoreNumGeo = new THREE.TextGeometry(timeLeftInt.toString(), {
+            font: font,
+            size: 20,
+            height: 5,
+            curveSegments: 70,
+            // bevelEnabled: true,
+            // bevelSize: 2,
+            // bevelOffset: 0,
+            // bevelSegments: 1
+
+        });
+
+
+        timeLeftNum = new THREE.Mesh(
+            scoreNumGeo,
+            new THREE.MeshLambertMaterial({ color: 0xe62444 })
+        );
+
+
+        // timeLeftNum.rotation.y = Math.PI * .08;
+        timeLeftNum.rotation.x = Math.PI * .1;
+
+
+        scene.add(timeLeftNum)
+    });
+
+
+}
+timeUpdate(1000)
+
+
 //audio-----------------------------------------------------------------
 const songs = ['audio/Ghetto Gaza_3.mp3', 'audio/Sacrifice_3.mp3', 'audio/reptar_4.mp3', 'audio/Futuristic Love Cannon.mp3', 'audio/The Last Strand (2).mp3', 'audio/Futuristic Love Cannon.mp3', 'audio/Only Human_4.mp3', 'audio/City_5.mp3']
 let song;
@@ -462,7 +533,7 @@ let i = 0
 document.addEventListener('keydown', (e) => {
     let value = String.fromCharCode(e.keyCode);
     currentLetter = value.toLowerCase()
-    if(!(value == " ") && !(e.keyCode == 17)) {
+    if(!(value == " ") && !(e.keyCode == 17) && !(e.keyCode == 16)) {
         muzzle = true
 
         
@@ -495,7 +566,7 @@ document.addEventListener('keydown', (e) => {
 })
 
 let gMode = false
-document.addEventListener('keydown', (e) => {
+document.addEventListener('keyup', (e) => {
     if (e.keyCode == 17){
         if(gMode) {
             rifle2.rotation.z = 0
@@ -558,6 +629,13 @@ const render = function () {
         scoreNum3D.position.z = camera.position.z - 30 
     }
 
+    if(timeLeftMesh){
+        debugger
+        timeLeftMesh.position.set(camera.position.x, camera.position.y + 180, camera.position.z - 300)
+        timeLeftNum.position.set(camera.position.x + 250, camera.position.y + 180, camera.position.z - 300)
+        timeUpdate(Math.floor(985 + camera.position.z))
+    }
+
 
     if(camera.position.z < -500) {
         // ironman.position.z = camera.position.z - 200
@@ -589,10 +667,11 @@ const render = function () {
             light3.position.z -= 0.3;
             planet.rotation.z -= 0.006;
             planet.position.z -= 0.06;
+            tie.position.x -= 0.3
+            tie.position.z -= 1
         }
 
-        tie.position.x -= 0.3
-        tie.position.z -= 1
+        
 
         if(newWord){
             for (let i = 0; i < letterList.length; i++) {
