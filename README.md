@@ -3,7 +3,7 @@ A 3D Typer Shooter
 
 TypR, A Javascript game about typing bullets at targets to spell words made using THREE.js.
 
-![Alt Text](https://media.giphy.com/media/WpxQ5IRXdXqIMugj0N/giphy.gif)
+![](https://media.giphy.com/media/WpxQ5IRXdXqIMugj0N/giphy.gif)
 
 1. Learning THREE.js and JavaScript game development style
 learn the basics of three.js to be able to render 3d images on to the screen
