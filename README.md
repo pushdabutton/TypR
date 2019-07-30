@@ -1,4 +1,6 @@
 # TypR
+
+![](https://media.giphy.com/media/XzXy2vzGjlQbKUpO6s/giphy.gif)
 A 3D Typer Shooter
 
 TypR, A Javascript game about typing bullets at targets to spell words made using THREE.js.
