@@ -18,17 +18,17 @@
   },
   "homepage": "https://github.com/pushdabutton/TypR#readme",
   "dependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5",
-    "@babel/preset-react": "^7.0.0",
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/preset-react": "^7.9.4",
     "babel": "^6.23.0",
-    "babel-loader": "^8.0.6",
+    "babel-loader": "^8.1.0",
     "loader": "^2.1.1",
     "three": "^0.105.2",
-    "webpack": "^4.34.0"
+    "webpack": "^4.43.0"
   },
   "devDependencies": {
-    "webpack-cli": "^3.3.4",
+    "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^2.11.5"
   }
 }
