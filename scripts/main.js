@@ -715,7 +715,7 @@ const render = function () {
         }
         else if (rifle2.position.y < -0.3) {movingUp = false;}
         let riflezPos
-
+        
         if(muzzle && !gMode){
             rifle2.position.y += 0.2
             rifle2.rotation.z += 0.1
@@ -724,7 +724,6 @@ const render = function () {
             muzzle = false
         }
 
-        
         if (rifle2.rotation.z > 0 && !gMode) {
             rifle2.rotation.z -= 0.15
             rifle2.position.z += 0.1
