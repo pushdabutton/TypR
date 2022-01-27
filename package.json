@@ -24,7 +24,7 @@
     "babel": "^6.23.0",
     "babel-loader": "^8.1.0",
     "loader": "^2.1.1",
-    "three": "^0.105.2",
+    "three": "^0.137.0",
     "webpack": "^4.43.0"
   },
   "devDependencies": {
